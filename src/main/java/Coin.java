@@ -1,12 +1,12 @@
 public enum Coin {
-    ONE(1),
-    TWO(2),
-    FIVE(5),
-    TEN(10),
-    TWENTY(20),
-    FIFTY(50),
+    TWO_POUND(200),
     ONE_POUND(100),
-    TWO_POUND(200);
+    FIFTY(50),
+    TWENTY(20),
+    TEN(10),
+    FIVE(5),
+    TWO(2),
+    ONE(1);
 
     private final int value;
 

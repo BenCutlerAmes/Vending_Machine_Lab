@@ -63,6 +63,10 @@ public class VendingMachine {
         return coinReturn;
     }
 
+    public void addStock(Product product) {
+        this.stock.add(product);
+    }
+
     public void addCoin(@NotNull Coin coin) {
         if (coin.getValue() == 1 || coin.getValue() == 2) {
             this.coinReturn.add(coin);
@@ -95,10 +99,55 @@ public class VendingMachine {
                 this.twoPoundCount += 1;
             }
         }
+        this.coinHopper.clear();
     }
 
     public int getFloatTotal() {
         int floatTotal = 0;
         return fivePenceCount * 5 + tenPenceCount * 10 + twentyPenceCount * 20 + fiftyPenceCount * 50 + onePoundCount * 100 + twoPoundCount * 200;
     }
+
+    public int getHopperTotal() {
+        int hopperTotal = 0;
+        for (Coin coin : this.coinHopper) {
+            hopperTotal += coin.getValue();
+        }
+        return hopperTotal;
+    }
+
+
+    public void buy(Product product) {
+        if (affordCheck(product)) {
+            int change = getHopperTotal()-product.getValue();
+            this.processCoins();
+            ArrayList<Coin> changeCoins;
+            changeCoins = getCoinsNeeded(change);
+            this.coinReturn.addAll(changeCoins);
+
+        } else {
+            int shortfall = product.getValue() - getHopperTotal();
+            System.out.println("You require " + shortfall + "p more");
+        }
+
+    }
+
+    public boolean affordCheck(@NotNull Product product) {
+        return getHopperTotal() >= product.getValue();
+    }
+
+
+    public ArrayList<Coin> getCoinsNeeded(int amount) {
+        int outstandingAmount = amount;
+        ArrayList<Coin> coinList;
+        coinList = new ArrayList<>();
+        for (Coin coin : Coin.values()) {
+            while (outstandingAmount >= coin.getValue()) {
+                coinList.add(coin);
+                outstandingAmount -= coin.getValue();
+            }
+        }
+        return coinList;
+    }
+
+
 }
